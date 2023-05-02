@@ -1,10 +1,11 @@
 from PIL import Image
 from transformers import pipeline
-from ascii_creator import grayscale_to_ascii
+import torch
 
 class Segmenter:
     def __init__(self) -> None:
-        self.segmenter = pipeline(model="nvidia/segformer-b0-finetuned-ade-512-512")
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.segmenter = pipeline(model="nvidia/segformer-b0-finetuned-ade-512-512", device=self.device)
     
     def get_segment_mask(self, image: Image, class_name: str) -> Image:
         """Returns a mask of the specified class in the image.
@@ -21,19 +22,3 @@ class Segmenter:
             if segment['label'] == class_name:
                 return segment['mask']
         return None
-
-if __name__ == '__main__':
-    segmenter = Segmenter()
-    IMAGE_PATH = 'person.jpg'
-    image = Image.open(IMAGE_PATH)
-    mask = segmenter.get_segment_mask(image, 'person')
-    
-    # Convert the image to grayscale
-    image = image.convert('L')
-
-    # Apply the mask to the image
-    masked_image = Image.composite(image, Image.new('L', image.size, 'black'), mask)
-
-    ascii_image = grayscale_to_ascii(masked_image, True)
-    with open('ascii_person.txt', 'w') as file:
-        file.write(ascii_image)
