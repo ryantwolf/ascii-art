@@ -13,3 +13,4 @@ Given an image with a person in it, it will turn that person into ascii art.
     python art_maker.py <input_image_path> <output_text_path>
     ```
     See `python art_maker.py --help` for more information
+    Try it out with some example images in `images/`.
