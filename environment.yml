@@ -1,0 +1,11 @@
+name: ascii
+channels:
+  - defaults
+  - pytorch
+  - nvidia
+dependencies:
+  - torchvision
+  - pillow
+  - pytorch-cuda=11.7
+  - transformers
+  - pytorch
